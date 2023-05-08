@@ -11,9 +11,9 @@ use WebService::Spacetraders;
 
 my $api = WebService::Spacetraders->new;
 
+=pod
 my $agent = $api->get_my_agent;
 warn Dumper $agent;
-=pod
 
 my $waypoint = $api->get_waypoint($agent->{headquarters});
 warn Dumper $waypoint;
@@ -30,11 +30,10 @@ warn Dumper $waypoints;
 
 my $shipyard = $api->get_shipyard('X1-DF55-69207D');
 warn Dumper $shipyard;
-=cut
 
 my $ships = $api->get_my_ships;
 warn Dumper $ships;
-=pod
+
 my $purchase = $api->purchase_ship('SHIP_MINING_DRONE','X1-DF55-69207D');
 warn Dumper $purchase;
 
@@ -47,7 +46,11 @@ warn Dumper $dock;
 my $refuel = $api->refuel('AKAGEW-3');
 warn Dumper $refuel;
 
-=cut
 
 my $orbit = $api->orbit('AKAGEW-3');
 warn Dumper $orbit;
+
+=cut
+
+my $extract = $api->extract('AKAGEW-3');
+warn Dumper $extract;

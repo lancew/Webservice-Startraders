@@ -311,4 +311,30 @@ sub orbit {
 
 }
 
+sub extract {
+    my ($self,$ship) = @_;
+
+    my $response = $self->http->request(
+        'POST',
+        $self->url . 'my/ships/' . $ship . '/extract',
+        {   headers => {
+                Authorization  => 'Bearer ' . $self->token,
+            },
+        }
+    );
+
+    if ( !$response->{success} ) {
+        if ($response->{content}) {
+            return decode_json $response->{content};
+        }       
+        return 'Response error';
+    }
+
+    my $json = decode_json $response->{content};
+
+    return $json->{data};
+
+}
+
+
 1;
