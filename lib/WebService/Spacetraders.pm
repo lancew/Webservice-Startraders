@@ -35,16 +35,32 @@ has url => (
 );
 
 
-sub get_my_agent {
-    my $self = shift;
+sub _make_request {
+    my ($self, $url, $method, $data) = @_;
+
+    my $content = undef;
+    if ($data) {
+        $content = encode_json( $data );
+    }
+
 
     my $response = $self->http->request(
-        'GET',
-        $self->url . 'my/agent',
-        { headers => { Authorization => 'Bearer ' . $self->token } }
+        $method || 'GET',
+        $url,
+        {   headers => {
+                Authorization  => 'Bearer ' . $self->token,
+                'Content-Type' => 'application/json',
+            },
+            content => $content,
+        }
     );
 
     if ( !$response->{success} ) {
+        if ($response->{content}) {
+            use Data::Dumper;
+            warn Dumper $response;
+            return decode_json $response->{content};
+        }       
         return 'Response error';
     }
 
@@ -53,25 +69,25 @@ sub get_my_agent {
     return $json->{data};
 }
 
+sub get_my_agent {
+    my $self = shift;
+
+    return $self->_make_request(
+        $self->url . 'my/agent',
+    );
+}
+
 sub get_waypoint {
     my ( $self, $waypoint ) = @_;
 
     my @waypoint_parts = split( '-', $waypoint );
     my $system         = $waypoint_parts[0] . '-' . $waypoint_parts[1];
+    my $url = $self->url . 'systems/' . $system . '/waypoints/' . $waypoint;
 
-    my $response = $self->http->request(
-        'GET',
-        $self->url . 'systems/' . $system . '/waypoints/' . $waypoint,
-        { headers => { Authorization => 'Bearer ' . $self->token } }
+    return $self->_make_request(
+        $url,
     );
 
-    if ( !$response->{success} ) {
-        return 'Response error';
-    }
-
-    my $json = decode_json $response->{content};
-
-    return $json->{data};
 }
 
 sub get_waypoints {
