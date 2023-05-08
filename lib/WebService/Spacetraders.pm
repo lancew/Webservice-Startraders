@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-package Webservice::Spacetraders;
+package WebService::Spacetraders;
 
 use Moo;
 use HTTP::Tiny;
@@ -204,6 +204,111 @@ sub purchase_ship {
     my $json = decode_json $response->{content};
 
     return $json->{data};
+}
+
+sub navigate {
+    my ( $self, $ship, $waypoint ) = @_;
+    die 'No ship provided'     unless $ship;
+    die 'No waypoint provided' unless $waypoint;
+
+    my $response = $self->http->request(
+        'POST',
+        $self->url . 'my/ships/' . $ship . '/navigate',
+        {   headers => {
+                Authorization  => 'Bearer ' . $self->token,
+                'Content-Type' => 'application/json',
+            },
+            content => encode_json(
+                {
+                    waypointSymbol => $waypoint,
+                }
+            ),
+        }
+    );
+
+    if ( !$response->{success} ) {
+        if ($response->{content}) {
+            return decode_json $response->{content};
+        }       
+        return 'Response error';
+    }
+
+    my $json = decode_json $response->{content};
+
+    return $json->{data};
+}
+
+sub dock {
+    my ($self,$ship) = @_;
+
+    my $response = $self->http->request(
+        'POST',
+        $self->url . 'my/ships/' . $ship . '/dock',
+        {   headers => {
+                Authorization  => 'Bearer ' . $self->token,
+            },
+        }
+    );
+
+    if ( !$response->{success} ) {
+        if ($response->{content}) {
+            return decode_json $response->{content};
+        }       
+        return 'Response error';
+    }
+
+    my $json = decode_json $response->{content};
+
+    return $json->{data};
+}
+
+sub refuel {
+    my ($self,$ship) = @_;
+
+    my $response = $self->http->request(
+        'POST',
+        $self->url . 'my/ships/' . $ship . '/refuel',
+        {   headers => {
+                Authorization  => 'Bearer ' . $self->token,
+            },
+        }
+    );
+
+    if ( !$response->{success} ) {
+        if ($response->{content}) {
+            return decode_json $response->{content};
+        }       
+        return 'Response error';
+    }
+
+    my $json = decode_json $response->{content};
+
+    return $json->{data};
+}
+
+sub orbit {
+    my ($self,$ship) = @_;
+
+    my $response = $self->http->request(
+        'POST',
+        $self->url . 'my/ships/' . $ship . '/orbit',
+        {   headers => {
+                Authorization  => 'Bearer ' . $self->token,
+            },
+        }
+    );
+
+    if ( !$response->{success} ) {
+        if ($response->{content}) {
+            return decode_json $response->{content};
+        }       
+        return 'Response error';
+    }
+
+    my $json = decode_json $response->{content};
+
+    return $json->{data};
+
 }
 
 1;
