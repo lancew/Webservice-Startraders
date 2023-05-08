@@ -34,15 +34,13 @@ has url => (
     },
 );
 
-
 sub _make_request {
-    my ($self, $url, $method, $data) = @_;
+    my ( $self, $url, $method, $data ) = @_;
 
     my $content = undef;
     if ($data) {
-        $content = encode_json( $data );
+        $content = encode_json($data);
     }
-
 
     my $response = $self->http->request(
         $method || 'GET',
@@ -56,11 +54,11 @@ sub _make_request {
     );
 
     if ( !$response->{success} ) {
-        if ($response->{content}) {
+        if ( $response->{content} ) {
             use Data::Dumper;
             warn Dumper $response;
             return decode_json $response->{content};
-        }       
+        }
         return 'Response error';
     }
 
@@ -72,9 +70,7 @@ sub _make_request {
 sub get_my_agent {
     my $self = shift;
 
-    return $self->_make_request(
-        $self->url . 'my/agent',
-    );
+    return $self->_make_request( $self->url . 'my/agent', );
 }
 
 sub get_waypoint {
@@ -84,9 +80,7 @@ sub get_waypoint {
     my $system         = $waypoint_parts[0] . '-' . $waypoint_parts[1];
     my $url = $self->url . 'systems/' . $system . '/waypoints/' . $waypoint;
 
-    return $self->_make_request(
-        $url,
-    );
+    return $self->_make_request( $url, );
 
 }
 
@@ -94,19 +88,9 @@ sub get_waypoints {
     my ( $self, $system ) = @_;
     die 'No system provided' unless $system;
 
-    my $response = $self->http->request(
-        'GET',
-        $self->url . 'systems/' . $system . '/waypoints/',
-        { headers => { Authorization => 'Bearer ' . $self->token } }
-    );
+    my $url = $self->url . 'systems/' . $system . '/waypoints/';
 
-    if ( !$response->{success} ) {
-        return 'Response error';
-    }
-
-    my $json = decode_json $response->{content};
-
-    return $json->{data};
+    return $self->_make_request( $url, );
 }
 
 sub get_contract {
@@ -235,18 +219,14 @@ sub navigate {
                 Authorization  => 'Bearer ' . $self->token,
                 'Content-Type' => 'application/json',
             },
-            content => encode_json(
-                {
-                    waypointSymbol => $waypoint,
-                }
-            ),
+            content => encode_json( { waypointSymbol => $waypoint, } ),
         }
     );
 
     if ( !$response->{success} ) {
-        if ($response->{content}) {
+        if ( $response->{content} ) {
             return decode_json $response->{content};
-        }       
+        }
         return 'Response error';
     }
 
@@ -256,21 +236,18 @@ sub navigate {
 }
 
 sub dock {
-    my ($self,$ship) = @_;
+    my ( $self, $ship ) = @_;
 
     my $response = $self->http->request(
         'POST',
         $self->url . 'my/ships/' . $ship . '/dock',
-        {   headers => {
-                Authorization  => 'Bearer ' . $self->token,
-            },
-        }
+        { headers => { Authorization => 'Bearer ' . $self->token, }, }
     );
 
     if ( !$response->{success} ) {
-        if ($response->{content}) {
+        if ( $response->{content} ) {
             return decode_json $response->{content};
-        }       
+        }
         return 'Response error';
     }
 
@@ -280,21 +257,18 @@ sub dock {
 }
 
 sub refuel {
-    my ($self,$ship) = @_;
+    my ( $self, $ship ) = @_;
 
     my $response = $self->http->request(
         'POST',
         $self->url . 'my/ships/' . $ship . '/refuel',
-        {   headers => {
-                Authorization  => 'Bearer ' . $self->token,
-            },
-        }
+        { headers => { Authorization => 'Bearer ' . $self->token, }, }
     );
 
     if ( !$response->{success} ) {
-        if ($response->{content}) {
+        if ( $response->{content} ) {
             return decode_json $response->{content};
-        }       
+        }
         return 'Response error';
     }
 
@@ -304,21 +278,18 @@ sub refuel {
 }
 
 sub orbit {
-    my ($self,$ship) = @_;
+    my ( $self, $ship ) = @_;
 
     my $response = $self->http->request(
         'POST',
         $self->url . 'my/ships/' . $ship . '/orbit',
-        {   headers => {
-                Authorization  => 'Bearer ' . $self->token,
-            },
-        }
+        { headers => { Authorization => 'Bearer ' . $self->token, }, }
     );
 
     if ( !$response->{success} ) {
-        if ($response->{content}) {
+        if ( $response->{content} ) {
             return decode_json $response->{content};
-        }       
+        }
         return 'Response error';
     }
 
@@ -329,21 +300,18 @@ sub orbit {
 }
 
 sub extract {
-    my ($self,$ship) = @_;
+    my ( $self, $ship ) = @_;
 
     my $response = $self->http->request(
         'POST',
         $self->url . 'my/ships/' . $ship . '/extract',
-        {   headers => {
-                Authorization  => 'Bearer ' . $self->token,
-            },
-        }
+        { headers => { Authorization => 'Bearer ' . $self->token, }, }
     );
 
     if ( !$response->{success} ) {
-        if ($response->{content}) {
+        if ( $response->{content} ) {
             return decode_json $response->{content};
-        }       
+        }
         return 'Response error';
     }
 
@@ -352,6 +320,5 @@ sub extract {
     return $json->{data};
 
 }
-
 
 1;
