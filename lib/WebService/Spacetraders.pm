@@ -128,24 +128,15 @@ sub get_shipyard {
     my @waypoint_parts = split( '-', $waypoint );
     my $system         = $waypoint_parts[0] . '-' . $waypoint_parts[1];
 
-    my $response = $self->http->request(
-        'GET',
-        $self->url
-            . 'systems/'
-            . $system
-            . '/waypoints/'
-            . $waypoint
-            . '/shipyard',
-        { headers => { Authorization => 'Bearer ' . $self->token } }
-    );
+    my $url
+        = $self->url
+        . 'systems/'
+        . $system
+        . '/waypoints/'
+        . $waypoint
+        . '/shipyard';
 
-    if ( !$response->{success} ) {
-        return 'Response error';
-    }
-
-    my $json = decode_json $response->{content};
-
-    return $json->{data};
+    return $self->_make_request($url);
 }
 
 sub get_my_ships {
