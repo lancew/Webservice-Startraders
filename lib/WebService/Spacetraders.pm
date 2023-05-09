@@ -142,19 +142,9 @@ sub get_shipyard {
 sub get_my_ships {
     my $self = shift;
 
-    my $response = $self->http->request(
-        'GET',
-        $self->url . 'my/ships',
-        { headers => { Authorization => 'Bearer ' . $self->token } }
-    );
+    my $url = $self->url . 'my/ships';
 
-    if ( !$response->{success} ) {
-        return 'Response error';
-    }
-
-    my $json = decode_json $response->{content};
-
-    return $json->{data};
+    return $self->_make_request($url);
 }
 
 sub purchase_ship {
