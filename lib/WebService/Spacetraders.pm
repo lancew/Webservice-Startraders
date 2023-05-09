@@ -55,8 +55,6 @@ sub _make_request {
 
     if ( !$response->{success} ) {
         if ( $response->{content} ) {
-            use Data::Dumper;
-            warn Dumper $response;
             return decode_json $response->{content};
         }
         return 'Response error';
@@ -106,19 +104,9 @@ sub accept_contract {
     my ( $self, $contract_id ) = @_;
     die 'No contract_id provided' unless $contract_id;
 
-    my $response = $self->http->request(
-        'POST',
-        $self->url . 'my/contracts/' . $contract_id . '/accept',
-        { headers => { Authorization => 'Bearer ' . $self->token } }
-    );
+    my $url = $self->url . 'my/contracts/' . $contract_id . '/accept';
 
-    if ( !$response->{success} ) {
-        return 'Response error';
-    }
-
-    my $json = decode_json $response->{content};
-
-    return $json->{data};
+    return $self->_make_request( $url, 'POST' );
 }
 
 sub get_shipyard {
