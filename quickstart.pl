@@ -17,11 +17,13 @@ warn Dumper $agent;
 
 my $waypoint = $api->get_waypoint($agent->{headquarters});
 warn Dumper $waypoint;
+=cut
 
 my $contract_id = 'clheol90v4wmas60dyns3uboy';
 my $contract = $api->get_contract($contract_id);
 warn Dumper $contract;
 
+=pod
 #my $contract_accpted = $api->accept_contract($contract_id);
 #warn Dumper $contract_accpted;
 
@@ -50,7 +52,7 @@ warn Dumper $refuel;
 my $orbit = $api->orbit('AKAGEW-3');
 warn Dumper $orbit;
 
-=cut
 
 my $extract = $api->extract('AKAGEW-3');
 warn Dumper $extract;
+=cut

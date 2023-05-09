@@ -1,7 +1,7 @@
+package WebService::Spacetraders;
+
 use strict;
 use warnings;
-
-package WebService::Spacetraders;
 
 use Moo;
 use HTTP::Tiny;
@@ -97,19 +97,9 @@ sub get_contract {
     my ( $self, $contract_id ) = @_;
     die 'No contract_id provided' unless $contract_id;
 
-    my $response = $self->http->request(
-        'GET',
-        $self->url . 'my/contracts/' . $contract_id,
-        { headers => { Authorization => 'Bearer ' . $self->token } }
-    );
-
-    if ( !$response->{success} ) {
-        return 'Response error';
-    }
-
-    my $json = decode_json $response->{content};
-
-    return $json->{data};
+    my $url = $self->url . 'my/contracts/' . $contract_id;
+    
+    return $self->_make_request( $url, );
 }
 
 sub accept_contract {
