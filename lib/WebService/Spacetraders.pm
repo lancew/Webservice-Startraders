@@ -34,6 +34,8 @@ has url => (
     },
 );
 
+# ------------------------------
+
 sub _make_request {
     my ( $self, $url, $method, $data ) = @_;
 
@@ -65,10 +67,32 @@ sub _make_request {
     return $json->{data};
 }
 
+
+# ----------------------------------
+sub register {
+    my ($self, %params) = @_;
+    die 'callsign not present' unless $params{callsign};
+    die 'faction not present' unless $params{faction};
+
+    my $url = $self->url . 'register';
+
+    return $self->_make_request( $url, 'POST', {
+        symbol => $params{callsign},
+        faction => $params{faction},
+    });
+}
+
+
 sub get_my_agent {
     my $self = shift;
 
     return $self->_make_request( $self->url . 'my/agent', );
+}
+
+sub get_my_factions {
+    my $self = shift;
+
+    return $self->_make_request( $self->url . 'my/factions', );
 }
 
 sub get_waypoint {
@@ -109,6 +133,27 @@ sub accept_contract {
     return $self->_make_request( $url, 'POST' );
 }
 
+sub contract_deliver {
+    my ( $self, %params ) = @_;
+    die 'contract is missing' unless $params{contract};
+    die 'tradeSymbol is missing' unless $params{'tradeSymbol'};
+    die 'units is missing' unless $params{'units'};
+    die 'shipSymbol is missing' unless $params{'shipSymbol'};
+
+    my $url = $self->url . 'my/contracts/' . $params{contract} . '/deliver';
+
+    return $self->_make_request( $url, 'POST', {%params});
+}
+
+sub fulfill_contract {
+    my ( $self, $contract_id ) = @_;
+    die 'No contract_id provided' unless $contract_id;
+
+    my $url = $self->url . 'my/contracts/' . $contract_id . '/fultill';
+
+    return $self->_make_request( $url, 'POST' );
+}
+
 sub get_shipyard {
     my ( $self, $waypoint ) = @_;
     die 'No waypoint provided' unless $waypoint;
@@ -127,10 +172,29 @@ sub get_shipyard {
     return $self->_make_request($url);
 }
 
+sub get_market {
+    my ( $self, $waypoint ) = @_;
+    die 'No waypoint provided' unless $waypoint;
+
+    my @waypoint_parts = split( '-', $waypoint );
+    my $system         = $waypoint_parts[0] . '-' . $waypoint_parts[1];
+
+    my $url
+        = $self->url
+        . 'systems/'
+        . $system
+        . '/waypoints/'
+        . $waypoint
+        . '/market';
+
+    return $self->_make_request($url);
+}
+
 sub get_my_ships {
     my $self = shift;
+    my $ship_id = shift || '';
 
-    my $url = $self->url . 'my/ships';
+    my $url = $self->url . 'my/ships/' . $ship_id;
 
     return $self->_make_request($url);
 }
@@ -194,6 +258,17 @@ sub extract {
     my $url = $self->url . 'my/ships/' . $ship . '/extract';
 
     return $self->_make_request( $url, 'POST' );
+}
+
+sub sell {
+    my ( $self, %params ) = @_;
+    die 'symbol is missing' unless $params{'symbol'};
+    die 'units is missing' unless $params{'units'};
+    die 'ship is missing' unless $params{'ship'};
+
+    my $url = $self->url . 'my/ships/' . $params{ship} . '/sell';
+
+    return $self->_make_request( $url, 'POST', {%params});
 }
 
 1;

@@ -34,14 +34,15 @@ warn Dumper $shipyard;
 my $ships = $api->get_my_ships;
 warn Dumper $ships;
 
+my $ship = $api->get_my_ships('AKAGEW-3');
+warn Dumper $ship;
+
 my $purchase = $api->purchase_ship('SHIP_MINING_DRONE','X1-DF55-69207D');
 warn Dumper $purchase;
-=cut
 
 my $navigate = $api->navigate('AKAGEW-3','X1-DF55-17335A');
 warn Dumper $navigate;
 
-=pod
 my $dock = $api->dock('AKAGEW-3');
 warn Dumper $dock;
 
@@ -54,3 +55,9 @@ warn Dumper $orbit;
 
 #my $extract = $api->extract('AKAGEW-3');
 #warn Dumper $extract;
+
+my $market = $api->get_market('X1-DF55-69207D');
+warn Dumper $market
+
+=cut
+

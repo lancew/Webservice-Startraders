@@ -19,4 +19,21 @@ is \@ship_keys, [
     'symbol'
 ];
 
+is $api->get_my_ships('AKAGEW-3'),
+{
+    'cargo' => E,
+    'crew' => E,
+    'engine' => E,
+    'frame' => E,
+    'fuel' => E,
+    'modules' => E,
+    'mounts' => E,
+    'nav' => E,
+    'reactor' => E,
+    'registration' => E,
+    'symbol' => E,
+};
+
+
+
 done_testing;
