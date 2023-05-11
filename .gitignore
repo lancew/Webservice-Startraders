@@ -15,6 +15,7 @@ nytprof.out
 
 # Dist::Zilla
 /.build/
+/WebService-Spacetraders-*
 
 # Module::Build
 _build/

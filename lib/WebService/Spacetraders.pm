@@ -1,4 +1,5 @@
 package WebService::Spacetraders;
+ # ABSTRACT: Wrapper for the Spacetraders.io api
 
 use strict;
 use warnings;
