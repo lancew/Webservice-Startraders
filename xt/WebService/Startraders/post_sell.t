@@ -8,9 +8,13 @@ is $api->sell(
     'ship'   => 'AKAGEW-3',
     ),
     {
-    agent       => E,
-    cargo       => E,
-    transaction => E,
+        error => {
+            code => 400,
+            message => E,
+            data => {
+                waypointSymbol => 'X1-DF55-17335A',
+            },
+        },
     };
 
 done_testing;
