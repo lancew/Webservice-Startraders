@@ -65,7 +65,10 @@ sub _make_request {
 
     my $json = decode_json $response->{content};
 
-    return $json->{data};
+    # Normally there is a "data" element that we want, BUT
+    # in case of some (like the general status) we just want
+    # the full JSON of there is not a data element
+    return $json->{data} || $json;
 }
 
 
@@ -88,6 +91,19 @@ sub get_my_agent {
     my $self = shift;
 
     return $self->_make_request( $self->url . 'my/agent', );
+}
+
+sub get_status {
+    my $self = shift;
+
+    return ($self->_make_request( $self->url ));
+}
+
+
+sub get_leaderboards {
+    my $self = shift;
+
+    return ($self->get_status)->{leaderboards};
 }
 
 sub get_my_factions {
